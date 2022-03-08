@@ -46,12 +46,8 @@ for unzip_file in unzip_list:
         except:
             with open(f'./unzip/{unzip_file}', 'r', encoding='utf-8') as file:
                 file_title = file.readline()[2:]
-            # 이미 작업이 완료된 파일
-            if unzip_file[:-3] == file_title:
-                print(f'{unzip_file}은 이미 작업되었습니다.')
-            # 작업이 안된 파일
-            # 중복 작업으로 인한 수정 전 파일 삭제
-            else:
+            # 이미 작업이 완료된 파일 및 폴더
+            if unzip_file[:-3] != file_title:
                 os.remove(f'./unzip/{unzip_file}')
                 shutil.rmtree(f'./unzip/{unzip_file[:-3]}')
 
