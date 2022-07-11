@@ -1,10 +1,11 @@
+from datetime import date, datetime
 from urllib import parse
 import shutil
 import zipfile
 import os
 import re
 
-class NotionJekyll:
+class NotiontoJekyll:
     def __init__(self):
         self.path_dir = './export'
         self.file_list = os.listdir(self.path_dir)
@@ -30,19 +31,24 @@ class NotionJekyll:
                 with open(f'./unzip/{unzip_file}', 'r', encoding='utf-8') as before_file:
                     # 파일을 읽어서 첫번째 줄을 제목 및 파일이름으로 설정
                     lines = before_file.readlines()
-                    title = lines[0]
-                    file_name = title[2:].rstrip()
-                    # 이미 작업이 완료된 파일
-                    if unzip_file[:-3] == file_name:
+                    
+                    # 작업이 완료된 파일
+                    if lines[0].strip() == '---':
                         continue
+
+                    print(lines[0])
+                    file_title = input('파일 제목을 입력해주세요: ')
+                    today = date.today()
+                    file_name = f'{today}-{file_title}'
+
                     # 이미지 경로 퍼센트 인코딩
                     percent_encoding_file = parse.quote(unzip_file).split('.')[0]
-                    title_encoding = parse.quote(file_name)
+                    image_path = f'../../../../../public/assets/{file_name}'
 
                     # 수정이 필요한 이미지 경로 수정
                     for i in range(len(lines)):
                         if percent_encoding_file in lines[i]:
-                            lines[i] = lines[i].replace(percent_encoding_file, title_encoding)
+                            lines[i] = lines[i].replace(percent_encoding_file, image_path)
                 self.modifyDir(unzip_file, file_name, lines)
 
 
@@ -62,6 +68,19 @@ class NotionJekyll:
 
         # 새로운 MD 파일
         with open(f'./unzip/{modify_name}.md', 'w', encoding='utf-8') as new_file:
+            new_file.writelines(l + '\n' for l in self.addBookTag())
             new_file.writelines(lines)
 
-NotionJekyll()
+
+    def addBookTag(self):
+        layout = 'post'
+        title = input('게시글의 제목을 입력해주세요:')
+        date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        categories = input('게시글의 카테고리를 입력해주세요:')
+        overview = input('게시글의 개요를 입력해주세요:')
+
+        return ['---', layout, title, date, categories, overview, '---']
+
+
+
+NotiontoJekyll()
