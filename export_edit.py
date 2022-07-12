@@ -73,11 +73,16 @@ class NotiontoJekyll:
 
 
     def addBookTag(self):
-        layout = 'post'
-        title = input('게시글의 제목을 입력해주세요:')
-        date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        categories = input('게시글의 카테고리를 입력해주세요:')
-        overview = input('게시글의 개요를 입력해주세요:')
+        t = input('게시글의 제목을 입력해주세요:')
+        d = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        c = input('게시글의 카테고리를 입력해주세요:')
+        o = input('게시글의 개요를 입력해주세요:')
+
+        layout = 'layout: post'
+        title = f'title: {t}'
+        date = f'date: {d}'
+        categories = f'categories: {c}'
+        overview = f'overview: {o}'
 
         return ['---', layout, title, date, categories, overview, '---']
 
